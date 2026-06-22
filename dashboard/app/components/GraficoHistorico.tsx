@@ -45,7 +45,7 @@ export function GraficoHistorico({ dados, tipo }: GraficoHistoricoProps) {
   return (
     <div className="h-[200px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={dadosFormatados} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+        <LineChart data={dadosFormatados} margin={{ top: 8, right: 8, left: 4, bottom: 0 }}>
           <CartesianGrid stroke="var(--line)" vertical={false} />
           <XAxis
             dataKey="hora"
@@ -58,7 +58,7 @@ export function GraficoHistorico({ dados, tipo }: GraficoHistoricoProps) {
             tick={{ fontSize: 10, fill: cor, fontFamily: "var(--font-mono)" }}
             tickLine={false}
             axisLine={false}
-            width={32}
+            width={38}
           />
           <Tooltip
             formatter={(v) => [`${v}${sufixo}`, label]}

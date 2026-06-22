@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f1ece2;
+  --ink: #1c1a17;
+  --signal: #c4541f;
+  --signal-soft: #c4541f1a;
+  --wire: #8a8478;
+  --ok: #3f6b4a;
+  --ok-soft: #3f6b4a1a;
+  --line: rgba(28, 26, 23, 0.1);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-signal: var(--signal);
+  --color-wire: var(--wire);
+  --color-ok: var(--ok);
+  --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background-color: var(--paper);
+  background-image: radial-gradient(circle at 1px 1px, rgba(28, 26, 23, 0.06) 1px, transparent 0);
+  background-size: 18px 18px;
+  color: var(--ink);
+  font-family: var(--font-mono), monospace;
+}
+
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(63, 107, 74, 0.5); }
+  70% { box-shadow: 0 0 0 6px rgba(63, 107, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(63, 107, 74, 0); }
+}
+
+.dot-live {
+  animation: pulse-dot 2s infinite;
+}

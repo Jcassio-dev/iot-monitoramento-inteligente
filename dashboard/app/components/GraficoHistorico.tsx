@@ -29,15 +29,24 @@ const config = {
   },
 };
 
+const MAX_PONTOS = 300;
+
 function formatarHora(iso: string): string {
   const d = new Date(iso);
   return d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }
 
+function downsample<T>(arr: T[], max: number): T[] {
+  if (arr.length <= max) return arr;
+  const step = arr.length / max;
+  return Array.from({ length: max }, (_, i) => arr[Math.round(i * step)]);
+}
+
 export function GraficoHistorico({ dados, tipo }: GraficoHistoricoProps) {
   const { cor, label, sufixo } = config[tipo];
 
-  const dadosFormatados = dados.map((d) => ({
+  const amostras = downsample(dados, MAX_PONTOS);
+  const dadosFormatados = amostras.map((d) => ({
     hora: formatarHora(d.timestamp),
     valor: d[tipo],
   }));

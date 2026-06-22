@@ -13,22 +13,37 @@ import { Leitura } from "../lib/api";
 
 interface GraficoHistoricoProps {
   dados: Leitura[];
+  tipo: "temperatura" | "umidade";
 }
+
+const config = {
+  temperatura: {
+    cor: "var(--signal)",
+    label: "Temperatura (°C)",
+    sufixo: "°C",
+  },
+  umidade: {
+    cor: "#3a6b8a",
+    label: "Umidade (%)",
+    sufixo: "%",
+  },
+};
 
 function formatarHora(iso: string): string {
   const d = new Date(iso);
   return d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }
 
-export function GraficoHistorico({ dados }: GraficoHistoricoProps) {
+export function GraficoHistorico({ dados, tipo }: GraficoHistoricoProps) {
+  const { cor, label, sufixo } = config[tipo];
+
   const dadosFormatados = dados.map((d) => ({
     hora: formatarHora(d.timestamp),
-    temperatura: d.temperatura,
-    umidade: d.umidade,
+    valor: d[tipo],
   }));
 
   return (
-    <div className="h-[280px] w-full">
+    <div className="h-[200px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={dadosFormatados} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
           <CartesianGrid stroke="var(--line)" vertical={false} />
@@ -40,21 +55,13 @@ export function GraficoHistorico({ dados }: GraficoHistoricoProps) {
             minTickGap={40}
           />
           <YAxis
-            yAxisId="temp"
-            tick={{ fontSize: 10, fill: "var(--signal)", fontFamily: "var(--font-mono)" }}
-            tickLine={false}
-            axisLine={false}
-            width={32}
-          />
-          <YAxis
-            yAxisId="umid"
-            orientation="right"
-            tick={{ fontSize: 10, fill: "#3a6b8a", fontFamily: "var(--font-mono)" }}
+            tick={{ fontSize: 10, fill: cor, fontFamily: "var(--font-mono)" }}
             tickLine={false}
             axisLine={false}
             width={32}
           />
           <Tooltip
+            formatter={(v: number) => [`${v}${sufixo}`, label]}
             contentStyle={{
               background: "var(--paper)",
               border: "1px solid var(--line)",
@@ -64,22 +71,12 @@ export function GraficoHistorico({ dados }: GraficoHistoricoProps) {
             }}
           />
           <Line
-            yAxisId="temp"
             type="monotone"
-            dataKey="temperatura"
-            stroke="var(--signal)"
+            dataKey="valor"
+            stroke={cor}
             strokeWidth={2}
             dot={false}
-            name="Temperatura (°C)"
-          />
-          <Line
-            yAxisId="umid"
-            type="monotone"
-            dataKey="umidade"
-            stroke="#3a6b8a"
-            strokeWidth={2}
-            dot={false}
-            name="Umidade (%)"
+            name={label}
           />
         </LineChart>
       </ResponsiveContainer>

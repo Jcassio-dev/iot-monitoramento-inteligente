@@ -27,13 +27,13 @@ def historico():
     cursor.execute("""
         SELECT timestamp, temperatura, umidade, presenca
         FROM leituras
-        ORDER BY id DESC
-        LIMIT 100
+        WHERE date(timestamp) = date('now', 'localtime')
+        ORDER BY id ASC
     """)
     linhas = cursor.fetchall()
     conn.close()
 
-    dados = [dict(linha) for linha in reversed(linhas)]
+    dados = [dict(linha) for linha in linhas]
     return jsonify(dados)
 
 

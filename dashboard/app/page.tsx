@@ -74,7 +74,7 @@ export default function Home() {
             className={`w-1.5 h-1.5 rounded-full ${conectado ? "dot-live" : ""}`}
             style={{ backgroundColor: conectado ? "var(--ok)" : "var(--wire)" }}
           />
-          <span>{conectado ? "conectado à central" : "conectando à central"}</span>
+          <span>{conectado ? "conectado" : "conectando"}</span>
         </div>
 
         {/* Título */}
@@ -82,7 +82,7 @@ export default function Home() {
           central do <em className="italic font-light text-signal">ambiente</em>
         </h1>
         <p className="font-mono text-[13px] text-wire mb-10 max-w-[46ch]">
-          Histórico de temperatura e umidade, e controle remoto da porta e do indicador — tudo via MQTT.
+          Historico de temperatura e umidade, e controle remoto da porta e do indicador via MQTT.
         </p>
 
         {erro && (
@@ -116,52 +116,69 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Gráfico */}
-        <section className="rounded border p-5 mb-8" style={{ borderColor: "var(--line)", backgroundColor: "rgba(255,255,255,0.5)" }}>
-          <h2 className="font-[family-name:var(--font-display)] text-[17px] font-medium mb-4">
-            Temperatura e umidade ao longo do tempo
-          </h2>
-          {dados.length > 0 ? (
-            <GraficoHistorico dados={dados} />
-          ) : (
-            <div className="h-[280px] flex items-center justify-center font-mono text-[12px] text-wire">
-              aguardando leituras...
-            </div>
-          )}
-        </section>
+        {/* Graficos */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <section className="rounded border p-5" style={{ borderColor: "var(--line)", backgroundColor: "rgba(255,255,255,0.5)" }}>
+            <h2 className="font-[family-name:var(--font-display)] text-[15px] font-medium mb-4">
+              Temperatura
+            </h2>
+            {dados.length > 0 ? (
+              <GraficoHistorico dados={dados} tipo="temperatura" />
+            ) : (
+              <div className="h-[200px] flex items-center justify-center font-mono text-[12px] text-wire">
+                aguardando leituras...
+              </div>
+            )}
+          </section>
+
+          <section className="rounded border p-5" style={{ borderColor: "var(--line)", backgroundColor: "rgba(255,255,255,0.5)" }}>
+            <h2 className="font-[family-name:var(--font-display)] text-[15px] font-medium mb-4">
+              Umidade
+            </h2>
+            {dados.length > 0 ? (
+              <GraficoHistorico dados={dados} tipo="umidade" />
+            ) : (
+              <div className="h-[200px] flex items-center justify-center font-mono text-[12px] text-wire">
+                aguardando leituras...
+              </div>
+            )}
+          </section>
+        </div>
 
         {/* Controles */}
-        <section className="rounded border p-5" style={{ borderColor: "var(--line)", backgroundColor: "rgba(255,255,255,0.5)" }}>
-          <h2 className="font-[family-name:var(--font-display)] text-[17px] font-medium mb-2">
-            Controle remoto
-          </h2>
+        {process.env.NEXT_PUBLIC_SHOW_CONTROLS === "true" && (
+          <section className="rounded border p-5" style={{ borderColor: "var(--line)", backgroundColor: "rgba(255,255,255,0.5)" }}>
+            <h2 className="font-[family-name:var(--font-display)] text-[17px] font-medium mb-2">
+              Controle remoto
+            </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-6 items-center">
-            <div className="divide-y" style={{ borderColor: "var(--line)" }}>
-              <ControleSwitch
-                label="Porta"
-                descricao="Abre ou fecha o servo motor"
-                ativo={portaAberta}
-                carregando={carregandoPorta}
-                onToggle={handleTogglePorta}
-              />
-              <ControleSwitch
-                label="LED indicador"
-                descricao="Acende o LED de presença manualmente"
-                ativo={ledAtivo}
-                carregando={carregandoLed}
-                onToggle={handleToggleLed}
-              />
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-6 items-center">
+              <div className="divide-y" style={{ borderColor: "var(--line)" }}>
+                <ControleSwitch
+                  label="Porta"
+                  descricao="Abre ou fecha o servo motor"
+                  ativo={portaAberta}
+                  carregando={carregandoPorta}
+                  onToggle={handleTogglePorta}
+                />
+                <ControleSwitch
+                  label="LED indicador"
+                  descricao="Acende o LED de presença manualmente"
+                  ativo={ledAtivo}
+                  carregando={carregandoLed}
+                  onToggle={handleToggleLed}
+                />
+              </div>
 
-            <div className="flex flex-col items-center gap-2 sm:border-l sm:pl-6" style={{ borderColor: "var(--line)" }}>
-              <PortaIlustracao aberta={portaAberta} />
-              <span className="font-mono text-[11px] uppercase tracking-wide" style={{ color: portaAberta ? "var(--ok)" : "var(--wire)" }}>
-                {portaAberta ? "aberta" : "fechada"}
-              </span>
+              <div className="flex flex-col items-center gap-2 sm:border-l sm:pl-6" style={{ borderColor: "var(--line)" }}>
+                <PortaIlustracao aberta={portaAberta} />
+                <span className="font-mono text-[11px] uppercase tracking-wide" style={{ color: portaAberta ? "var(--ok)" : "var(--wire)" }}>
+                  {portaAberta ? "aberta" : "fechada"}
+                </span>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         <div className="mt-8 flex justify-between flex-wrap gap-2 font-mono text-[11px] text-wire">
           <span>tópico base: <b className="text-ink">imd0907/cassio_lourrayni/sala</b></span>

@@ -61,7 +61,7 @@ export function GraficoHistorico({ dados, tipo }: GraficoHistoricoProps) {
             width={32}
           />
           <Tooltip
-            formatter={(v: number) => [`${v}${sufixo}`, label]}
+            formatter={(v) => [`${v}${sufixo}`, label]}
             contentStyle={{
               background: "var(--paper)",
               border: "1px solid var(--line)",

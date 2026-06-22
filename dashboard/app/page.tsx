@@ -182,7 +182,17 @@ export default function Home() {
 
         <div className="mt-8 flex justify-between flex-wrap gap-2 font-mono text-[11px] text-wire">
           <span>tópico base: <b className="text-ink">imd0907/cassio_lourrayni/sala</b></span>
-          <span>atualiza a cada <b className="text-ink">5s</b></span>
+          <div className="flex items-center gap-4">
+            <a
+              href="https://github.com/Jcassio-dev/iot-monitoramento-inteligente"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-ink transition-colors"
+            >
+              github
+            </a>
+            <span>atualiza a cada <b className="text-ink">5s</b></span>
+          </div>
         </div>
       </div>
     </main>
